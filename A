@@ -1,0 +1,138 @@
+TCP
+
+import socket
+import threading
+import time
+
+PORT = 8080
+
+def run_server():
+    # Create and set up the server
+    server = socket.socket()
+    server.bind(('0.0.0.0', PORT))
+    server.listen(1)
+    print(f"Server listening on port {PORT}")
+
+    # Wait for a client connection
+    client, addr = server.accept()
+    print(f"Connection from {addr}")
+
+    # Receive message from client
+    data = client.recv(1024).decode()
+    print(f"Server received: {data}")
+
+    # Send message to client
+    msg = "Hello from server"
+    client.send(msg.encode())
+    print("Hello message sent from server")
+
+    # Close connections
+    client.close()
+    server.close()
+
+
+def run_client():
+    # Wait a moment for the server to start
+    time.sleep(1)
+    client = socket.socket()
+
+    try:
+        client.connect(('127.0.0.1', PORT))
+    except ConnectionRefusedError:
+        print("Connection failed. Is the server running?")
+        return
+
+    # Send message to server
+    msg = "Hello from client"
+    client.send(msg.encode())
+    print("Client: Hello message sent")
+
+    # Receive message from server
+    data = client.recv(1024).decode()
+    print(f"Client received: {data}")
+
+    client.close()
+
+
+# Run server in a background thread
+server_thread = threading.Thread(target=run_server)
+server_thread.start()
+
+# Run client in main thread
+run_client()
+
+# Wait for server thread to finish
+server_thread.join()
+
+
+
+
+
+UDP
+import socket
+import threading
+import time
+
+PORT = 8080
+
+def make_udp_socket(bind_addr=None):
+    """Helper to create and optionally bind a UDP socket"""
+    s = socket.socket(type=socket.SOCK_DGRAM)
+    if bind_addr:
+        s.bind(bind_addr)
+    return s
+
+def run_udp_server():
+    server_socket = make_udp_socket(('0.0.0.0', PORT))
+    print(f"UDP Server listening on port {PORT}")
+
+    data, addr = server_socket.recvfrom(1024)
+    print(f"Server received: {data.decode()} from {addr}")
+
+    server_socket.sendto(b"Hello from UDP server", addr)
+    print("Response sent from server")
+
+    server_socket.close()
+
+def run_udp_client():
+    time.sleep(1)  # wait for server to start
+    client_socket = make_udp_socket()
+    server_address = ('127.0.0.1', PORT)
+
+    client_socket.sendto(b"Hello from UDP client", server_address)
+    print("Client: Message sent")
+
+    data, addr = client_socket.recvfrom(1024)
+    print(f"Client received: {data.decode()}")
+
+    client_socket.close()
+
+server_thread = threading.Thread(target=run_udp_server)
+server_thread.start()
+run_udp_client()
+server_thread.join()
+
+
+
+
+
+
+lekey Bucket
+#include <iostream>
+using namespace std;
+
+int main() {
+    int storage = 0, bucket_size = 10, input_pkt = 4, output_pkt = 1;
+
+    for (int i = 0; i < 4; i++) {
+        if (storage + input_pkt > bucket_size)
+            cout << "Packet loss = " << input_pkt << endl;
+        else
+            storage += input_pkt;
+
+        cout << "Buffer size = " << storage << " out of bucket size = " << bucket_size << endl;
+        storage -= output_pkt;
+    }
+
+    return 0;
+}
