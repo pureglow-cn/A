@@ -1,138 +1,100 @@
-TCP
+Error Coding
 
-import socket
-import threading
-import time
-
-PORT = 8080
-
-def run_server():
-    # Create and set up the server
-    server = socket.socket()
-    server.bind(('0.0.0.0', PORT))
-    server.listen(1)
-    print(f"Server listening on port {PORT}")
-
-    # Wait for a client connection
-    client, addr = server.accept()
-    print(f"Connection from {addr}")
-
-    # Receive message from client
-    data = client.recv(1024).decode()
-    print(f"Server received: {data}")
-
-    # Send message to client
-    msg = "Hello from server"
-    client.send(msg.encode())
-    print("Hello message sent from server")
-
-    # Close connections
-    client.close()
-    server.close()
+clc;
+D = poly(0,'D');
+g1D = 1+D+D^2; //generator polynomial 1
+g2D = 1+D^2; //generator polynomial 2
+mD = 1+0+0+D^3+D^4; //message sequence polynomial representation
+x1D = g1D*mD; //top output polynomial
+x2D = g2D*mD; //bottom output polynomial
+x1 = coeff(x1D);
+x2 = coeff(x2D);
+disp(modulo(x1,2),'top output sequence')
+disp(modulo(x2,2),'bottom output sequence')
 
 
-def run_client():
-    # Wait a moment for the server to start
-    time.sleep(1)
-    client = socket.socket()
+Information Theory
 
-    try:
-        client.connect(('127.0.0.1', PORT))
-    except ConnectionRefusedError:
-        print("Connection failed. Is the server running?")
-        return
-
-    # Send message to server
-    msg = "Hello from client"
-    client.send(msg.encode())
-    print("Client: Hello message sent")
-
-    # Receive message from server
-    data = client.recv(1024).decode()
-    print(f"Client received: {data}")
-
-    client.close()
-
-
-# Run server in a background thread
-server_thread = threading.Thread(target=run_server)
-server_thread.start()
-
-# Run client in main thread
-run_client()
-
-# Wait for server thread to finish
-server_thread.join()
+clear;
+clear;
+clc;
+dmin=5
+ // (s+1)<= dmin number errors can be detected(s)
+ s=dmin-1;
+printf(" i)Number of detected errors \n\n \t s <= %d  ",s );
+//(2t+1)<=dmin number errors can be corrected(t)
+t=(dmin-1)/2;
+printf("\n\n ii) Number of corrected errors\n\n \t  t<= %d ",t );
 
 
 
+Information Capacity
+
+clear;
+clear;
+clc;
+B=3.4*10^3;
+SNR=30
+SN=10^(SNR/10);
+C=B*log2(1+SN)//Information capacity
+printf("Information capacity of telephone is \n\n \tC = %.2f kbps",C/1000);
 
 
-UDP
-import socket
-import threading
-import time
+Source Entropy and Information Rate
 
-PORT = 8080
+clc;
+clear;
+px1=1/2;
+px2=1/4;
+px3=1/8;
+px4=1/16;
+px5=1/16;
+Tb=10^-3;
+HX=px1*log2(1/px1)+px2*log2(1/px2)+px3*log2(1/px3)+px4*log2(1/px4)+px5*log2(1/px5);
+printf("i) source entropy\n\n  \tH(X) = %.2f bits/symbol\n",HX);//source entropy
+r=1/Tb;
+R=r*HX;//information rate
+printf("\n\n ii)information rate \n\n \t R = %d bits/sec",R);
 
-def make_udp_socket(bind_addr=None):
-    """Helper to create and optionally bind a UDP socket"""
-    s = socket.socket(type=socket.SOCK_DGRAM)
-    if bind_addr:
-        s.bind(bind_addr)
-    return s
 
-def run_udp_server():
-    server_socket = make_udp_socket(('0.0.0.0', PORT))
-    print(f"UDP Server listening on port {PORT}")
+Probability of error
 
-    data, addr = server_socket.recvfrom(1024)
-    print(f"Server received: {data.decode()} from {addr}")
+clear; 
+clc;
+//Probability of any symbol from n are erroneous = nCm*(p^m)*(1-p)^(n-m)
+//Thus, the probability of error undetected, P_undeterr = (4C2*(p^2)*(1-p)^2)+4C4*(p^4) = 6*(p^2)*(1-p)^2)+(p^4)
+//Probability of error in detection(P_undeterr1) for p = 0.1
+p = 0.1
+P_undeterr1 = 6*(p^2)*((1-p)^2)+(p^4)
 
-    server_socket.sendto(b"Hello from UDP server", addr)
-    print("Response sent from server")
+disp('Probability of error in detection for p = 0.1 is '+string(P_undeterr1))
 
-    server_socket.close()
+//Probability of error in detection(P_undeterr2) for p = 0.01
+p = 0.01
+P_undeterr2 = 6*(p^2)*((1-p)^2)+(p^4)
 
-def run_udp_client():
-    time.sleep(1)  # wait for server to start
-    client_socket = make_udp_socket()
-    server_address = ('127.0.0.1', PORT)
-
-    client_socket.sendto(b"Hello from UDP client", server_address)
-    print("Client: Message sent")
-
-    data, addr = client_socket.recvfrom(1024)
-    print(f"Client received: {data.decode()}")
-
-    client_socket.close()
-
-server_thread = threading.Thread(target=run_udp_server)
-server_thread.start()
-run_udp_client()
-server_thread.join()
+disp('Probability of error in detection for p = 0.01 is '+string(P_undeterr2))
 
 
 
 
+222222
 
 
-lekey Bucket
-#include <iostream>
-using namespace std;
+clear;
+clc;
 
-int main() {
-    int storage = 0, bucket_size = 10, input_pkt = 4, output_pkt = 1;
+p = 0.1;
+p_undeterr1 = 6 * (p^2) * ((1 - p)^2) + (p^4);
+printf("p = %f\n", p);
+printf("p_undeterr1 = %f\n", p_undeterr1);
+disp("Probability of error in detection for p = 0.1 is " + string(p_undeterr1));
 
-    for (int i = 0; i < 4; i++) {
-        if (storage + input_pkt > bucket_size)
-            cout << "Packet loss = " << input_pkt << endl;
-        else
-            storage += input_pkt;
+p = 0.01;
+p_undeterr2 = 6 * (p^2) * ((1 - p)^2) + (p^4);
+printf("\np = %f\n", p);
+printf("p_undeterr2 = %f\n", p_undeterr2);
+disp("Probability of error in detection for p = 0.01 is " + string(p_undeterr2));
 
-        cout << "Buffer size = " << storage << " out of bucket size = " << bucket_size << endl;
-        storage -= output_pkt;
-    }
 
-    return 0;
-}
+
