@@ -1,100 +1,545 @@
-Error Coding
+Memory Transfer
 
-clc;
-D = poly(0,'D');
-g1D = 1+D+D^2; //generator polynomial 1
-g2D = 1+D^2; //generator polynomial 2
-mD = 1+0+0+D^3+D^4; //message sequence polynomial representation
-x1D = g1D*mD; //top output polynomial
-x2D = g2D*mD; //bottom output polynomial
-x1 = coeff(x1D);
-x2 = coeff(x2D);
-disp(modulo(x1,2),'top output sequence')
-disp(modulo(x2,2),'bottom output sequence')
+Addition:
+#include<reg51.h>
+void main(void)
+{
+unsigned char x,y,z;
+x=0x0A;
+y=0x05;
+P1=0x00;
+z=x+y;
+P1=z;
+}
 
+Subtract:
+#include<reg51.h>
+void main(void)
+{
+unsigned char x,y,z;
+x=0x08;
+y=0x04;
+P1=0x00;
+z=x-y;
+P1=z;
+}
 
-Information Theory
+Multiply:
+#include<reg51.h>
+void main(void)
+{
+unsigned char x,y,z;
+x=0x10;
+y=0x02;
+P1=0x00;
+z=x*y;
+P1=z;
+}
 
-clear;
-clear;
-clc;
-dmin=5
- // (s+1)<= dmin number errors can be detected(s)
- s=dmin-1;
-printf(" i)Number of detected errors \n\n \t s <= %d  ",s );
-//(2t+1)<=dmin number errors can be corrected(t)
-t=(dmin-1)/2;
-printf("\n\n ii) Number of corrected errors\n\n \t  t<= %d ",t );
+Divide:
+#include<reg51.h>
+void main(void)
+{
+unsigned char x,y,z;
+x=0x10;
+y=0x02;
+P1=0x00;
+z=x/y;
+P1=z;
+}
 
-
-
-Information Capacity
-
-clear;
-clear;
-clc;
-B=3.4*10^3;
-SNR=30
-SN=10^(SNR/10);
-C=B*log2(1+SN)//Information capacity
-printf("Information capacity of telephone is \n\n \tC = %.2f kbps",C/1000);
-
-
-Source Entropy and Information Rate
-
-clc;
-clear;
-px1=1/2;
-px2=1/4;
-px3=1/8;
-px4=1/16;
-px5=1/16;
-Tb=10^-3;
-HX=px1*log2(1/px1)+px2*log2(1/px2)+px3*log2(1/px3)+px4*log2(1/px4)+px5*log2(1/px5);
-printf("i) source entropy\n\n  \tH(X) = %.2f bits/symbol\n",HX);//source entropy
-r=1/Tb;
-R=r*HX;//information rate
-printf("\n\n ii)information rate \n\n \t R = %d bits/sec",R);
-
-
-Probability of error
-
-clear; 
-clc;
-//Probability of any symbol from n are erroneous = nCm*(p^m)*(1-p)^(n-m)
-//Thus, the probability of error undetected, P_undeterr = (4C2*(p^2)*(1-p)^2)+4C4*(p^4) = 6*(p^2)*(1-p)^2)+(p^4)
-//Probability of error in detection(P_undeterr1) for p = 0.1
-p = 0.1
-P_undeterr1 = 6*(p^2)*((1-p)^2)+(p^4)
-
-disp('Probability of error in detection for p = 0.1 is '+string(P_undeterr1))
-
-//Probability of error in detection(P_undeterr2) for p = 0.01
-p = 0.01
-P_undeterr2 = 6*(p^2)*((1-p)^2)+(p^4)
-
-disp('Probability of error in detection for p = 0.01 is '+string(P_undeterr2))
+C program to for data transfer:
+#include <reg51.h>
+void main(void)
+{
+unsigned char mynum[]= "012345ABCD";
+unsigned char z;
+for(z=0; z<=9; z++)
+P1= mynum[z];
+}
 
 
 
 
-222222
 
 
-clear;
-clc;
 
-p = 0.1;
-p_undeterr1 = 6 * (p^2) * ((1 - p)^2) + (p^4);
-printf("p = %f\n", p);
-printf("p_undeterr1 = %f\n", p_undeterr1);
-disp("Probability of error in detection for p = 0.1 is " + string(p_undeterr1));
+LED Flashing:
+#include<reg51.h>
+void Delay(unsigned int time);
+void main()
+{P1=0x00;
+while(1)
+{
+P1=0xFF;
+Delay(250);
+P1=0x00;
+Delay(250);
+}}
+void Delay(unsigned int time)
+{
+int i,j;
+for(i=0;i<time;i++)
+for(j=0;j<165;j++);
+}
 
-p = 0.01;
-p_undeterr2 = 6 * (p^2) * ((1 - p)^2) + (p^4);
-printf("\np = %f\n", p);
-printf("p_undeterr2 = %f\n", p_undeterr2);
-disp("Probability of error in detection for p = 0.01 is " + string(p_undeterr2));
+LED Toggling:
+#include<reg51.h>
+void Delay(unsigned int time);
+void main()
+{
+while(1)
+{
+P1=0xAA;
+Delay(250);
+P1=~P1;
+Delay(250);
+}
+}
+void Delay(unsigned int time)
+{
+int i,j;
+for(i=0;i<time;i++)
+for(j=0;j<165;j++);
+}
 
+
+
+
+
+
+
+SQUARE WAVE:
+
+#include<Reg51.h>
+void delay(unsigned int time);
+void main()
+{
+while(1)
+{
+P0=0XFF;
+delay(25);
+P0=0X00;
+delay(25);
+}
+}
+void delay(unsigned int time)
+{
+int i,j;
+for(i=0;i<time;i++)
+for(j=0;j<5000;j++);
+}
+
+TRIANGULAR WAVE:
+#include<reg51.h>
+void main()
+{int count;
+P0=0X00;
+P0=0X00;
+for(count=0X00;count<0Xff;count++)
+{P0=count;
+}
+P0=0Xff;
+P0=0Xff;
+for(count=0Xff;count>0X00;count--)
+{P0=count;
+}
+}
+
+
+
+
+
+
+STEPPER MOTOR
+
+#include <reg51.h>
+void delay(unsigned int time);
+void main() {
+P0 = 0x00;
+while (1) {
+P0 = 0x09;
+delay(100);
+P0 = 0x0A;
+delay(100);
+P0 = 0x06;
+delay(100);
+}
+}
+void delay(unsigned int time) {
+unsigned int i;
+TMOD = 0x10;
+for (i = 0; i < time; i++) {
+TH1 = 0xFF;
+TL1 = 0x49;
+TR1 = 1;
+while (TF1 == 0);
+TR1 = 0;
+TF1 = 0;
+}
+}
+
+
+
+
+
+
+
+
+
+LED+ BUZZER 
+
+#include <p18f4550.h>
+// Configuration bits
+#pragma config FOSC = HS       // High-speed oscillator
+#pragma config WDT = OFF       // Watchdog timer off
+#pragma config LVP = OFF       // Low-voltage programming off
+#pragma config PBADEN = OFF    // PORTB<4:0> as digital I/O
+// Pin macros
+#define lrbit PORTBbits.RB4 // Switch 0
+#define rlbit PORTBbits.RB5 // Switch 1
+#define buzzer PORTCbits.RC2
+#define relay  PORTCbits.RC1
+
+// Delay function
+void MsDelay (unsigned int time)
+{
+    unsigned int i, j;
+    for (i = 0; i < time; i++)
+        for (j = 0; j < 275; j++);
+}
+void main()
+{
+    unsigned char val = 0;
+    INTCON2bits.RBPU = 0;    // Enable PORTB pull-ups
+    ADCON1 = 0x0F;           // All digital I/O
+    TRISBbits.TRISB4 = 1;    // RB4 input
+    TRISBbits.TRISB5 = 1;    // RB5 input
+    TRISCbits.TRISC1 = 0;    // RC1 output
+    TRISCbits.TRISC2 = 0;    // RC2 output
+    TRISD = 0x00;            // PORTD output
+    PORTD = 0x01;            // start pattern
+    buzzer = 0;
+    relay  = 0;
+    while (1)
+    {
+        // read switches
+        if (!(lrbit))        // active low
+            val = 1;
+        if (!(rlbit))
+            val = 2;
+       // if switch 1 pressed
+        if (val == 1)
+        {
+            buzzer = 1;
+            relay  = 1;
+            PORTD = PORTD >> 1;
+            if (PORTD == 0x00)
+                PORTD = 0x80;
+            MsDelay(250);
+        }
+       // if switch 2 pressed
+        if (val == 2)
+        {
+            buzzer = 0;
+            relay  = 0;
+            PORTD = PORTD << 1;
+            if (PORTD == 0x00)
+                PORTD = 0x01;
+            MsDelay(250);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+LCD PIC
+
+#include <p18f4550.h>
+
+// Configuration Bits
+#pragma config FOSC = HS 
+#pragma config WDT = OFF 
+#pragma config LVP = OFF 
+#pragma config PBADEN = OFF
+
+#define RS PORTCbits.RC0
+#define RW PORTCbits.RC1
+#define EN PORTCbits.RC2
+
+void LCD_data(unsigned char data);
+void LCD_cmd(unsigned char cmd);
+void LCD_init();
+void delay(unsigned int time);
+
+void main() 
+{
+    TRISD = 0x00;  // LCD data pins as output
+    TRISC = 0x00;  // LCD control pins (RC0, RC1, RC2) as output
+
+    LCD_init();
+
+    LCD_cmd(0x80); // Cursor at start
+    
+    LCD_data('L');
+    delay(25);
+    LCD_data('C');
+    delay(25);
+    LCD_data('D');
+    delay(25);
+    LCD_data('P');
+    delay(25);
+    LCD_data('I');
+    delay(25);
+    LCD_data('C');
+    delay(25);
+    LCD_data('1');
+    delay(25);
+    LCD_data('8');
+
+    while (1);  // Stay here forever
+}
+
+void LCD_data(unsigned char data) 
+{
+    PORTD = data; 
+    RS = 1; 
+    RW = 0; 
+    EN = 1; 
+    delay(2);
+    EN = 0;
+    delay(2);
+}
+
+void LCD_cmd(unsigned char cmd) 
+{
+    PORTD = cmd;
+    RS = 0;
+    RW = 0;
+    EN = 1;
+    delay(2);
+    EN = 0;
+    delay(2);  // Extra stability
+}
+
+void LCD_init() 
+{
+    delay(15);    
+    LCD_cmd(0x38);
+    delay(5);
+    LCD_cmd(0x01);
+    delay(5);
+    LCD_cmd(0x06);
+    delay(2);
+    LCD_cmd(0x0C);
+    delay(2);
+}
+
+void delay(unsigned int time) 
+{
+    int i, j;
+    for (i = 0; i < time; i++)
+        for (j = 0; j < 275; j++);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LCD 
+#include <reg51.h> // Include register definition file for AT89C51
+#define LCD P0 // Define LCD data port
+sbit RS = P1^0; // Register Select pin
+sbit RW = P1^1; // Read/Write pin
+sbit E = P1^2; // Enable pin
+void Delay(unsigned int ms);
+void LCD_Command(unsigned char cmd);
+void LCD_Char(unsigned char Data);
+void LCD_Init(void);
+void LCD_String(char *str);
+void main() {
+LCD_Init(); // Initialize LCD
+LCD_String("ISQUAREIT TE E&TC"); // Display message
+while (1); // Loop forever
+}
+void LCD_Init(void) {
+Delay(20); // Wait for more than 15 ms after power on
+LCD_Command(0x38); // 2 Lines, 5x7 Matrix
+Delay(5); // Wait for a bit after this command
+LCD_Command(0x0C); // Display ON, Cursor OFF
+LCD_Command(0x06); // Increment cursor
+LCD_Command(0x01); // Clear display
+Delay(2); // Wait for clear command to complete
+}
+void LCD_Command(unsigned char cmd) {
+RS = 0; // Command mode
+RW = 0; // Write mode
+LCD = cmd; // Send command
+E = 1; // Enable high
+Delay(1); // Delay for processing
+E = 0; // Enable low
+Delay(5); // Wait for command to be executed
+
+}
+
+void LCD_Char(unsigned char Data) {
+RS = 1; // Data mode
+RW = 0; // Write mode
+LCD = Data; // Send data
+E = 1; // Enable high
+Delay(1); // Delay for processing
+E = 0; // Enable low
+Delay(5); // Wait for data to be written
+}
+void LCD_String(char *str) {
+while (*str) {
+LCD_Char(*str++); // Send each character
+}
+}
+void Delay(unsigned int ms) {
+unsigned int i, j;
+for (i = 0; i < ms; i++) {
+for (j = 0; j < 1275; j++); // Approx delay
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7 seg
+#include <reg51.h>
+
+void delay(int k);
+
+void main()
+{
+    unsigned char i;
+    unsigned char arr[10] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 
+                             0x6D, 0x7D, 0x07, 0x7F, 0x6F};
+
+    P0 = 0x00;  // Initialize port 0
+
+    while (1)
+    {
+        for (i = 0; i < 10; i++)
+        {
+            P0 = arr[i];   // Output the segment code
+            delay(100);    // Delay for visibility
+        }
+    }
+}
+
+void delay(int k)
+{
+    int i, j;
+    for (i = 0; i < k; i++)
+        for (j = 0; j < 1275; j++);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DC motor
+#include <reg51.h>
+
+// --- Pin definitions ---
+sbit motor_pin1 = P1^0;
+sbit motor_pin2 = P1^1;
+sbit button_reverse = P2^0;
+
+// --- Global variable ---
+bit motor_direction = 0;
+
+// --- Delay function ---
+void delay(unsigned int time) {
+    unsigned int i, j;
+    for (i = 0; i < time; i++)
+        for (j = 0; j < 1275; j++);
+}
+
+// --- Slow motor delay (simulate low speed) ---
+void low_speed_delay(unsigned int time) {
+    unsigned int i, j;
+    for (i = 0; i < time; i++)
+        for (j = 0; j < 1000; j++); // Adjust value for desired RPM
+}
+
+// --- Main program ---
+void main() {
+    motor_pin1 = 1;
+    motor_pin2 = 0;
+
+    while (1) {
+        // Check for direction change button press
+        if (button_reverse == 0) {   // Active LOW button
+            delay(50);               // Debounce delay
+            while (button_reverse == 0);  // Wait until button released
+
+            motor_direction = !motor_direction; // Toggle direction
+
+            if (motor_direction == 1) {
+                motor_pin1 = 0;
+                motor_pin2 = 1; // Reverse direction
+            } else {
+                motor_pin1 = 1;
+                motor_pin2 = 0; // Forward direction
+            }
+
+            delay(50);
+        }
+
+        // Simulate low speed by toggling motor ON/OFF
+        motor_pin1 = 1;
+        motor_pin2 = 0;
+        low_speed_delay(10);    // Motor ON
+
+        motor_pin1 = 0;
+        motor_pin2 = 0;
+        low_speed_delay(10);    // Motor OFF
+    }
+}
 
 
